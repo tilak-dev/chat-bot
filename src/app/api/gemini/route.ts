@@ -1,28 +1,60 @@
-// pages/api/generate-questions.ts
-import type { NextApiRequest, NextApiResponse } from "next";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { StreamingTextResponse, streamText } from "ai";
-import { NextResponse } from "next/server";
+/*
+ * Install the Generative AI SDK
+ *
+ * $ npm install @google/generative-ai
+ */
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY || "",
-});
+import {
+  GoogleGenerativeAI,
+} from "@google/generative-ai";
+import { NextRequest, NextResponse } from "next/server";
 
-export const maxDuration = 30;
+export async function POST(request: NextRequest) {
+  const reqBody = await request.json();
+  const { prompt }  = reqBody;
+  const apiKey = process.env.GEMINI_API_KEY || "";
+  const genAI = new GoogleGenerativeAI(apiKey);
 
-export async function POST(req: NextApiRequest) {
-  try {
-    const { prompt } = req.body;
-    const formattedPrompt = `Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be based on the input that user provide: ${prompt}.`;
+  const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",
+  });
 
-    const result = await streamText({
-      model: google("models/gemini-pro"),
-      prompt: formattedPrompt,
-    }); // Convert stream to text
-    console.log(result);
-    return new StreamingTextResponse(result.toAIStream());
-  } catch (error) {
-    console.error("An unexpected error occurred:", error);
-    return NextResponse.json({ error: "Failed to generate questions" });
+  const generationConfig = {
+    temperature: 1,
+    topP: 0.95,
+    topK: 64,
+    maxOutputTokens: 8192,
+    responseMimeType: "text/plain",
+  };
+
+  async function run(prompt: string) {
+    const chatSession = model.startChat({
+      generationConfig,
+      history: [
+        {
+          role: "user",
+          parts: [
+            {text: "you are a friendly chat bot, user we ask you question you have to answer them in a polite manner \n"},
+          ],
+        },
+      ],
+    });
+
+    const result = await chatSession.sendMessage(prompt);
+    console.log(result.response.text());
+    return result.response.text();
   }
+  const result = await run(prompt);
+  console.log(result);
+  if (!result) {
+    return NextResponse.json({
+      success: false,
+      message: "No response from model",
+    });
+  }
+  return NextResponse.json({
+    success: true,
+    message: "Response from model",
+    response: result,
+  });
 }

@@ -14,12 +14,14 @@ export  const GenerateQuestions = () => {
     setQuestions(null);
 
     try {
-      const response = await axios.post("api/gemini")
+      const response = await axios.post("api/gemini",{
+        prompt: userPrompt,
+      })
 
       if (response) {
         const data = await response.data;
-        setQuestions(data.questions);
-        console.log('Generated questions:', data.questions);
+        // setQuestions(data.questions);
+        console.log('Generated questions:',response);
       } else {
         console.error('Failed to fetch questions');
       }
