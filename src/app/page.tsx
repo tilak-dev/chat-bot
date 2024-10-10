@@ -54,7 +54,7 @@ export default function Home() {
           {/* chat greeting message */}
           <div className=" space-y-1">
             <p className=" bg-teal-500 text-white max-w-max py-0.5 rounded-xl px-3 ">
-              Hello, I'm anshu a ChatBot.
+              Hello, I&apos;m anshu a ChatBot.
             </p>
 
             {messages &&
@@ -67,7 +67,7 @@ export default function Home() {
                     {message.gemini}
                   </p>
                 ) : (
-                  <div className="flex  justify-end">
+                  <div  key={index} className="flex  justify-end">
                      <p
                     key={index}
                     className="w-7/12 md:text-lg bg-blue-500 text-white max-w-max py-0.5 rounded-xl px-3 md:rounded-xl"
