@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,6 +30,32 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <footer className="bg-gray-800 text-white py-6">
+  <div className="container mx-auto flex flex-col items-center">
+    <p className="text-sm">
+      &copy; {new Date().getFullYear()} Created by Tilak
+    </p>
+    <div className="mt-2">
+      <Link
+        href="https://www.linkedin.com/in/tilak-singh-developer/" 
+        className="text-blue-400 hover:text-blue-600 mx-2"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        LinkedIn
+      </Link>
+      <Link
+        href="https://github.com/tilak-dev" 
+        className="text-gray-400 hover:text-gray-200 mx-2"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </Link>
+    </div>
+  </div>
+</footer>
+
       </body>
     </html>
   );
