@@ -41,11 +41,11 @@ export async function POST(request: NextRequest) {
     });
 
     const result = await chatSession.sendMessage(prompt);
-    console.log(result.response.text());
+    // console.log(result.response.text());
     return result.response.text();
   }
   const result = await run(prompt);
-  console.log(result);
+  // console.log(result);
   if (!result) {
     return NextResponse.json({
       success: false,
