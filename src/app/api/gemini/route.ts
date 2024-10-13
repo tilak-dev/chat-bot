@@ -12,7 +12,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   const reqBody = await request.json();
   const { prompt }  = reqBody;
-  const apiKey = process.env.GEMINI_API_KEY || "";
+  const apiKey = process.env.GEMINI_API_KEY;
+  if(!apiKey) {
+    throw new Error("API key not specified")
+  }
   const genAI = new GoogleGenerativeAI(apiKey);
 
   const model = genAI.getGenerativeModel({
