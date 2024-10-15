@@ -15,6 +15,7 @@
     "ai-chat": "file:",
     "axios": "^1.7.7",
     "next": "^14.2.15",
+    "qrcode.react": "^4.0.1",
     "react": "^18",
     "react-dom": "^18"
   },
